@@ -12,6 +12,6 @@ class EmailSender
     }
     public function sendEmail($emailReceiver, $messageContent)
     {
-        throw new Exception('Not implemented');
+        return new \Exception('Not implemented');
     }
 }

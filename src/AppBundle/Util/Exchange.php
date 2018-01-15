@@ -2,7 +2,6 @@
 
 namespace AppBundle\Util;
 
-use PHPUnit\Framework\Exception;
 
 class Exchange
 {
@@ -26,24 +25,24 @@ class Exchange
     {
         if (! $this->receiver->isValid())
         {
-            throw new Exception('Exchange creation failed because the receiver is not active');
+            return new \Exception('Exchange creation failed because the receiver is not active');
         } elseif (! $this->product->isValid())
         {
-            throw new Exception('Exchange creation failed because the product is not active');
+            return new \Exception('Exchange creation failed because the product is not active');
         }
         $now = new \DateTime();
         if ($this->begin < $now)
         {
-            throw new Exception('Exchange creation failed because begin date must not be in the past');
+            return new \Exception('Exchange creation failed because begin date must not be in the past');
         } elseif ($this->begin > $this->end) {
-            throw new Exception('Exchange creation failed because begin date must be before end date');
+            return new \Exception('Exchange creation failed because begin date must be before end date');
         }
 
         $userIsTooYoung = $this->databaseConnection->saveExchange($this);
 
         if ($userIsTooYoung)
         {
-            $this->emailSender->sendEmail($this->product->getOwner()->getEmail(), "You have a new exchange !!");
+            $this->emailSender->sendEmail($this->product->getOwner(), "You have a new exchange !!");
         }
         return true;
     }
